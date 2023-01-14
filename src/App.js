@@ -1,47 +1,78 @@
 import './App.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import SingleCard from "./component/SingleCard";
 
 
 const cardImages = [
-    {"src": "/img/helmet-1.png"},
-    {"src": "/img/potion-1.png"},
-    {"src": "/img/ring-1.png"},
-    {"src": "/img/scroll-1.png"},
-    {"src": "/img/shield-1.png"},
-    {"src": "/img/sword-1.png"},
+    {"src": "/img/helmet-1.png", matched: false},
+    {"src": "/img/potion-1.png", matched: false},
+    {"src": "/img/ring-1.png", matched: false},
+    {"src": "/img/scroll-1.png", matched: false},
+    {"src": "/img/shield-1.png", matched: false},
+    {"src": "/img/sword-1.png", matched: false},
 ]
 
 function App() {
     const [cards, setCards] = useState([]);
     const [turns, setTurns] = useState(0);
+    const [choiceOne, setChoiceOne] = useState(null);
+    const [choiceTwo, setChoiceTwo] = useState(null);
 
     //shuffle cards
     const shuffleCards = () => {
-        // 1. [...cardImages, ...cardImages]是为了复制两个重复的
-        // 2. sort(() => Math.random() - 0.5)这个是为了随机赋值正负来进行排序 () => 是对里面的每一个item进行操作
-        // 3. map((cards) => ({...cards, id: Math.random()})) 为了给每一个object {...cards, id: Math.random()}赋予一个id
         const shuffledCards = [...cardImages, ...cardImages]
             .sort(() => Math.random() - 0.5)
             .map((card) => ({...card, id: Math.random()}))
         setCards(shuffledCards)
         setTurns(0)
-        console.log(shuffledCards)
     }
 
+    // handle a choice
+    const handleChoice = (card) => {
+        choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
+    }
 
+    // compare 2 selected cards
+    useEffect(() => {
+        if (choiceOne && choiceTwo) {
+            if (choiceOne.src === choiceTwo.src) {
+                setCards(prevCards => {
+                    return prevCards.map(card => {
+                        if (card.src === choiceOne.src) {
+                            return {...card, matched: true}
+                        }
+                        return card
+                    })
+                })
+                resetTurn()
+            } else {
+                setTimeout(() => {
+                    resetTurn()
+                }, 1000)
+            }
+
+        }
+    }, [choiceOne, choiceTwo])
+    console.log(cards)
+
+    // reset choices & increase turn
+    const resetTurn = () => {
+        setChoiceOne(null)
+        setChoiceTwo(null)
+        setTurns(preTurns => preTurns + 1)
+    }
     return (
         <div className="App">
             <h1>Magic Match</h1>
             <button onClick={shuffleCards}>New Game</button>
-
             <div className={"card-grid"}>
-                {cards.map((card)=>(
-                    <div className={"card"} key={card.id}>
-                        <div>
-                            <img className={"front"} src={card.src} alt={"card front"}/>
-                            <img className={"back"} src={"/img/cover.png"} alt={"card back"}/>
-                        </div>
-                    </div>
+                {cards.map((card) => (
+                    <SingleCard
+                        card={card}
+                        key={card.id}
+                        handleChoice={handleChoice}
+                        flipped={card === choiceOne || card === choiceTwo || card.matched}
+                    />
                 ))}
             </div>
         </div>
