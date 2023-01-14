@@ -1,5 +1,5 @@
 # Magic Memory
-![img.png](img.png)
+![img.png](public/img/img.png)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -17,7 +17,7 @@ You may also see any lint errors in the console.
 ## Feature
 1. Create a new game by clicking New Game
 2. When two Cards are of the same type, the flipped state will be retained
-   ![img_1.png](img_1.png)
+   ![img_1.png](public/img/img_1.png)
 3. When two cards are not of the same type, it will be reversed.
 4. flip animation
 5. Turns records the total number of steps
