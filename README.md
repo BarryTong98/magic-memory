@@ -13,9 +13,9 @@ npm install -g json-server
 ```
 ```
 json-server --watch ./data/db.json
-//Please open another terminal and type the below commmand
+# Please open another terminal and type the below commmand
 npm start
-//Would you like to run the app on another port instead?
+# Would you like to run the app on another port instead?
 Y or yes
 ```
 
